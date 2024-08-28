@@ -1,0 +1,43 @@
+services:
+  postgresql:
+    container_name: image-scan-pg
+    image: bitnami/postgresql
+    ports:
+      - '5436:5432'
+    environment:
+      - POSTGRESQL_USERNAME=docker
+      - POSTGRESQL_PASSWORD=123456
+      - POSTGRESQL_DATABASE=db-image-scan
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - image-scan-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    container_name: image-scan-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3333:3333'
+      - '5555:5555'
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: 'postgresql://docker:123456@postgresql:5432/db-image-scan'
+      API_PORT: 3333
+    networks:
+      - image-scan-network
+
+networks:
+  image-scan-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
