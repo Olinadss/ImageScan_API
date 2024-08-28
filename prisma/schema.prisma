@@ -14,15 +14,15 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(uuid())
-  email      String    @unique
-  created_at DateTime  @default(now())
-  Messure    Messure[]
+  id         String     @id @default(uuid())
+  email      String     @unique
+  created_at DateTime   @default(now())
+  Messure    Menssure[]
 
   @@map("users")
 }
 
-model Messure {
+model Menssure {
   id               String   @id @default(uuid())
   image_url        String
   customer_code    String
