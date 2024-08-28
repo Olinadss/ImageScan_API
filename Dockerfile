@@ -35,6 +35,9 @@ COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/prisma ./prisma
 
+# Instala apenas as dependências de produção
+RUN npm install
+
 # Define as variáveis de ambiente necessárias
 ENV DATABASE_URL=postgresql://docker:123456@postgresql:5432/db-image-scan
 
